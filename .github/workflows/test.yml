@@ -1,0 +1,26 @@
+name: test
+on: pull_request
+jobs:
+  test-packages:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+      - name: Setup Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16'
+          cache: 'yarn'
+      - name: Install dependencies
+        run: yarn install --immutable
+      - name: Generate types
+        run: yarn typechain
+      - name: Run lint
+        run: yarn lint
+      - name: Build Components
+        run: yarn build
+      - name: Run wallets tests
+        run: yarn test
+        working-directory: wallets-testing
+        env:
+          RPC_URL: ${{ secrets.RPC_URL }}

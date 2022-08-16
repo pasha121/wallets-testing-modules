@@ -17,6 +17,10 @@ jobs:
         run: yarn lint
       - name: Build Components
         run: yarn build
+
+      - name: Install dependencies
+        working-directory: wallets-testing
+        run: yarn install --immutable
       - name: Run wallets tests
         run: yarn test
         working-directory: wallets-testing

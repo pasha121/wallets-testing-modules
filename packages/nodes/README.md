@@ -33,6 +33,7 @@ export class MyService {
   async myMethod() {
      await this.ethereumNodeService.startNode();
      const state = await this.ethereumNodeService.state;
+     expect(state).toBeDefined()
      await this.ethereumNodeService.stopNode();
   }
 }

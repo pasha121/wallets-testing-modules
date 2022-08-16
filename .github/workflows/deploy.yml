@@ -25,7 +25,7 @@ jobs:
       - name: Build Components
         run: yarn build
 
-      - name: Install dependencies
+      - name: Install dependencies in wallets-testing
         working-directory: wallets-testing
         run: yarn install --immutable
       - name: Run walllets tests

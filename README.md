@@ -1,6 +1,6 @@
 # Lido NestJS Modules for wallets testing
 
-NestJS modules for automated testing wallets integrations.
+NestJS modules for wallets integrations automated testing.
 
 ## Packages
 

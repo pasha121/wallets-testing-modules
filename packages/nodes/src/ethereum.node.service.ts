@@ -9,7 +9,11 @@ import {
   Page,
 } from 'playwright';
 import { utils } from 'ethers';
-import { OPTIONS, ServiceUnreachableError } from './node.constants';
+import {
+  EthereumNodeServiceOptions,
+  OPTIONS,
+  ServiceUnreachableError,
+} from './node.constants';
 
 @Injectable()
 export class EthereumNodeService {
@@ -20,12 +24,12 @@ export class EthereumNodeService {
 
   state: { node: Server; account: string; secretKey: string } | undefined;
 
-  constructor(@Inject(OPTIONS) private options: { rpcUrl: string }) {}
+  constructor(@Inject(OPTIONS) private options: EthereumNodeServiceOptions) {}
 
   async startNode() {
     if (this.state !== undefined) return;
     const node = ganache.server({
-      chainId: 0x1,
+      chainId: this.options.chainId || 0x1,
       fork: { url: this.options.rpcUrl },
       logging: { quiet: true },
       wallet: { defaultBalance: EthereumNodeService.defaultBalance },

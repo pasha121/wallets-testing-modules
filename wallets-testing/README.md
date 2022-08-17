@@ -1,6 +1,6 @@
 ## Project with wallets tests
 
-Based on @lido-wallets-testing packages
+Based on @lidofinance/wallets-testing packages
 
 ## Run tests
 

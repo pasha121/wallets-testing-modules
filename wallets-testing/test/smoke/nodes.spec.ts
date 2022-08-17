@@ -1,6 +1,9 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication } from '@nestjs/common';
-import { EthereumNodeService, NodeModule } from '@lido-wallets-testing/nodes';
+import {
+  EthereumNodeService,
+  NodeModule,
+} from '@lidofinance/wallets-testing-nodes';
 import { ConfigModule, ConfigService } from '../../config';
 
 describe('Nodes package smoke tests', () => {

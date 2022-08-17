@@ -1,5 +1,5 @@
 {
-  "name": "@lido-wallets-testing/nodes",
+  "name": "@lidofinance/wallets-testing-nodes",
   "version": "0.0.0-semantic-release",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",

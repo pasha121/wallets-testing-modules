@@ -1,6 +1,11 @@
 export const OPTIONS = 'RPC_NODE_OPTIONS';
 
-export type EthereumNodeServiceOptions = { rpcUrl: string; chainId?: number };
+export type EthereumNodeServiceOptions = {
+  rpcUrl: string;
+  port?: number;
+  chainId?: number;
+  defaultBalance?: number;
+};
 
 export class ServiceUnreachableError extends Error {
   private cause: { message: string };

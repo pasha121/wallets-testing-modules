@@ -17,12 +17,9 @@ import {
 
 @Injectable()
 export class EthereumNodeService {
-  readonly PORT = 7545;
-  readonly nodeUrl = `http://127.0.0.1:${this.PORT}`;
-  public static readonly defaultBalance = 6700;
-  public static readonly stakeAmount = '100';
-
-  state: { node: Server; account: string; secretKey: string } | undefined;
+  state:
+    | { node: Server; nodeUrl: string; account: string; secretKey: string }
+    | undefined;
 
   constructor(@Inject(OPTIONS) private options: EthereumNodeServiceOptions) {}
 
@@ -32,9 +29,10 @@ export class EthereumNodeService {
       chainId: this.options.chainId || 0x1,
       fork: { url: this.options.rpcUrl },
       logging: { quiet: true },
-      wallet: { defaultBalance: EthereumNodeService.defaultBalance },
+      wallet: { defaultBalance: this.options.defaultBalance || 1000 },
     });
-    await node.listen(this.PORT);
+    await node.listen(this.options.port || 7545);
+    const nodeUrl = `http://127.0.0.1:${this.options.port || 7545}`;
     const initialAccounts = await node.provider.getInitialAccounts();
     const accounts = await node.provider.request({
       method: 'eth_accounts',
@@ -49,7 +47,7 @@ export class EthereumNodeService {
     node.on('close', async () => {
       this.state = undefined;
     });
-    this.state = { node, account, secretKey };
+    this.state = { node, nodeUrl, account, secretKey };
   }
 
   async stopNode() {
@@ -67,9 +65,10 @@ export class EthereumNodeService {
 
   async mockRoute(url: string, contextOrPage: BrowserContext | Page) {
     await contextOrPage.route(url, async (route) => {
+      if (this.state === undefined) return;
       const response = await this.fetchSafety(
         contextOrPage.request,
-        this.nodeUrl,
+        this.state.nodeUrl,
         {
           method: route.request().method(),
           data: route.request().postData(),

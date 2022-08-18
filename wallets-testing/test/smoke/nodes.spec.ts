@@ -5,8 +5,9 @@ import {
   NodeModule,
 } from '@lidofinance/wallets-testing-nodes';
 import { ConfigModule, ConfigService } from '../../config';
+import { MATIC_TOKEN } from './consts';
 
-describe('Nodes package smoke tests', () => {
+describe('Ethereum node', () => {
   let app: INestApplication;
   let ethereumNodeService: EthereumNodeService;
   let configService: ConfigService;
@@ -31,10 +32,21 @@ describe('Nodes package smoke tests', () => {
     await app.init();
   });
 
-  it('Try init node package', async () => {
+  it('should init', async () => {
     await ethereumNodeService.startNode();
     expect(ethereumNodeService.state !== undefined);
     expect((await ethereumNodeService.getBalance()) === '6700.00');
-    await ethereumNodeService.stopNode();
   }, 30000);
+
+  it('should set ERC20 balance', async () => {
+    await ethereumNodeService.startNode();
+    expect(ethereumNodeService.state !== undefined);
+    const account = ethereumNodeService.state.accounts[0]
+    expect((await ethereumNodeService.setErc20Balance(account, MATIC_TOKEN, 0, 100)).toString() === '100');
+  }, 30000);
+
+  afterEach(async () => {
+    await ethereumNodeService.stopNode();
+  });
+
 });

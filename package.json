@@ -1,0 +1,48 @@
+{
+  "name": "wallets-testing-modules",
+  "version": "0.0.0-semantic-release",
+  "description": "Common modules for testing wallets",
+  "private": true,
+  "workspaces": [
+    "packages/*"
+  ],
+  "sideEffects": false,
+  "scripts": {
+    "build": "rollup -c",
+    "test": "jest",
+    "lint": "eslint --ext ts ."
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^16.1.0",
+    "@commitlint/config-conventional": "^16.0.0",
+    "@lidofinance/yarn-workspaces-list": "^0.1.1",
+    "@qiwi/multi-semantic-release": "^3.17.1",
+    "@rollup/plugin-node-resolve": "^13.3.0",
+    "@types/eslint-plugin-prettier": "^3.1.0",
+    "@types/jest": "^27.4.0",
+    "@types/node": "^18.7.2",
+    "@typescript-eslint/eslint-plugin": "^5.10.0",
+    "@typescript-eslint/parser": "^5.10.0",
+    "dotenv": "^16.0.0",
+    "eslint": "^8.7.0",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-prettier": "^4.0.0",
+    "lint-staged": "^12.2.2",
+    "prettier": "^2.5.1",
+    "rollup": "^2.75.6",
+    "rollup-plugin-delete": "^2.0.0",
+    "rollup-plugin-typescript2": "^0.31.1",
+    "ts-jest": "^27.1.4",
+    "tslib": "^2.3.1",
+    "typescript": "^4.5.5"
+  },
+  "lint-staged": {
+    "./**/src/**/*.ts": [
+      "yarn eslint --max-warnings=0"
+    ],
+    "./**/*.{ts,js,md,json}": [
+      "prettier --write"
+    ]
+  },
+  "packageManager": "yarn@3.1.1"
+}

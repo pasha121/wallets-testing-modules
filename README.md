@@ -1,2 +1,21 @@
-# wallets-testing-modules
-Modules for testing wallets integrations
+# Lido NestJS Modules for wallets testing
+
+NestJS modules for wallets integrations automated testing.
+
+## Packages
+
+- [nodes](/packages/nodes/README.md)
+
+## Testing app
+
+- [wallets-testing](/wallets-testing/README.md)
+
+## Install
+
+1. `yarn && yarn postinstall`
+3. `yarn build`
+
+## Usage
+
+- `yarn build` — Build all packages
+- `yarn lint` — Run eslint across packages

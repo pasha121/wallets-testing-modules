@@ -8,17 +8,23 @@ import {
   BrowserContext,
   Page,
 } from 'playwright';
-import { utils } from 'ethers';
+import { providers, utils, BigNumber, Contract } from 'ethers';
 import {
   EthereumNodeServiceOptions,
   OPTIONS,
   ServiceUnreachableError,
+  ERC20_SHORT_ABI,
 } from './node.constants';
 
 @Injectable()
 export class EthereumNodeService {
   state:
-    | { node: Server; nodeUrl: string; account: string; secretKey: string }
+    | {
+        node: Server;
+        nodeUrl: string;
+        accounts: string[];
+        secretKeys: string[];
+      }
     | undefined;
 
   constructor(@Inject(OPTIONS) private options: EthereumNodeServiceOptions) {}
@@ -34,33 +40,70 @@ export class EthereumNodeService {
     await node.listen(this.options.port || 7545);
     const nodeUrl = `http://127.0.0.1:${this.options.port || 7545}`;
     const initialAccounts = await node.provider.getInitialAccounts();
-    const accounts = await node.provider.request({
-      method: 'eth_accounts',
-      params: [],
-    });
-    const account = accounts[0];
-    const secretKey = initialAccounts[account].secretKey;
-    await node.provider.send('evm_setAccountNonce', [
-      account,
-      '0x' + Math.floor(Math.random() * 9) + 1,
-    ]);
+    const accounts = Object.keys(initialAccounts);
+    const secretKeys = accounts.map((key) => initialAccounts[key].secretKey);
+    await Promise.all(
+      accounts.map(async (key: string) => {
+        await node.provider.send('evm_setAccountNonce', [
+          key,
+          '0x' + Math.floor(Math.random() * 9) + 1,
+        ]);
+      }),
+    );
+
     node.on('close', async () => {
       this.state = undefined;
     });
-    this.state = { node, nodeUrl, account, secretKey };
+    this.state = { node, nodeUrl, accounts, secretKeys };
   }
 
   async stopNode() {
     if (this.state !== undefined) await this.state.node.close();
   }
 
-  async getBalance() {
+  async getBalance(account?: string) {
     if (this.state === undefined) return undefined;
     const response = await this.state.node.provider.request({
       method: 'eth_getBalance',
-      params: [this.state.account, 'latest'],
+      params: [account || this.state.accounts[0], 'latest'],
     });
     return utils.formatEther(response);
+  }
+
+  async setErc20Balance(
+    account: string,
+    tokenAddress: string,
+    mappingSlot: number,
+    balance: number,
+  ) {
+    if (this.state === undefined) throw 'Node not ready';
+
+    const ethersProvider = new providers.Web3Provider(
+      this.state.node.provider as any,
+    );
+    const contract = new Contract(
+      tokenAddress,
+      ERC20_SHORT_ABI,
+      ethersProvider,
+    );
+    const decimals = BigNumber.from(10).pow(await contract.decimals());
+    // slot index for _balances mapping in the contract
+    const mappingSlotHex = BigNumber.from(mappingSlot).toHexString();
+
+    // calculate slot index for account address in the mapping
+    const slot = utils.solidityKeccak256(
+      ['bytes32', 'bytes32'],
+      [utils.hexZeroPad(account, 32), utils.hexZeroPad(mappingSlotHex, 32)],
+    );
+
+    const value = BigNumber.from(balance).mul(decimals);
+
+    await this.state.node.provider.request({
+      method: 'evm_setAccountStorageAt',
+      params: [tokenAddress, slot, value.toHexString()],
+    });
+    const balanceAfter = await contract.balanceOf(account);
+    return balanceAfter.div(decimals);
   }
 
   async mockRoute(url: string, contextOrPage: BrowserContext | Page) {

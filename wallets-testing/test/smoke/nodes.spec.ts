@@ -34,13 +34,13 @@ describe('Ethereum node', () => {
 
   it('should init', async () => {
     await ethereumNodeService.startNode();
-    expect(ethereumNodeService.state !== undefined);
-    expect((await ethereumNodeService.getBalance()) === '6700.00');
+    expect(ethereumNodeService.state).toBeDefined();
+    expect(await ethereumNodeService.getBalance()).toEqual('1000.0');
   }, 30000);
 
   it('should set ERC20 balance', async () => {
     await ethereumNodeService.startNode();
-    expect(ethereumNodeService.state !== undefined);
+    expect(ethereumNodeService.state).toBeDefined();
     const account = ethereumNodeService.state.accounts[0];
     expect(
       (

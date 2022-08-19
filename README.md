@@ -5,6 +5,7 @@ NestJS modules for wallets integrations automated testing.
 ## Packages
 
 - [nodes](/packages/nodes/README.md)
+- [extensions](/packages/extensions/README.md)
 
 ## Testing app
 
@@ -13,7 +14,7 @@ NestJS modules for wallets integrations automated testing.
 ## Install
 
 1. `yarn && yarn postinstall`
-3. `yarn build`
+2. `yarn build`
 
 ## Usage
 

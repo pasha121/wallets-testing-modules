@@ -33,7 +33,7 @@ export class ExtensionService {
     this.logger.debug(`Download extension from ${url}`);
     const extensionDir = await fs.mkdtemp(os.tmpdir() + path.sep);
     await axios.get(url, { responseType: 'stream' }).then((response) => {
-      let zip = unzipper.Extract({ path: extensionDir });
+      const zip = unzipper.Extract({ path: extensionDir });
       response.data.pipe(zip);
       return once(zip, 'close');
     });
@@ -46,7 +46,7 @@ export class ExtensionService {
   async downloadFromStore(id: string) {
     this.logger.debug(`Download extension ${id} from chrome store`);
     const extensionDir = await fs.mkdtemp(os.tmpdir() + path.sep);
-    let browser = await chromium.launch();
+    const browser = await chromium.launch();
     const chromeVersion = browser.version();
     await browser.close();
     const url = `https://clients2.google.com/service/update2/crx?response=redirect&prodversion=${chromeVersion}&x=id%3D${id}%26installsource%3Dondemand%26uc&nacl_arch=x86-64&acceptformat=crx2,crx3`;
@@ -54,7 +54,7 @@ export class ExtensionService {
       .get(url, { responseType: 'arraybuffer' })
       .then((response) => this.arrayBufferToStream(response.data))
       .then((response) => {
-        let zip = unzipper.Extract({ path: extensionDir });
+        const zip = unzipper.Extract({ path: extensionDir });
         response.pipe(zip);
         return once(zip, 'close');
       });
@@ -65,7 +65,7 @@ export class ExtensionService {
   }
 
   private arrayBufferToStream(arraybuffer: any) {
-    let data = arraybuffer;
+    const data = arraybuffer;
     let buf = new Uint8Array(data);
     let publicKeyLength, signatureLength, header, zipStartOffset;
     if (buf[4] === 2) {
@@ -86,9 +86,9 @@ export class ExtensionService {
   }
 
   async cleanupDownloadedExtensions() {
-    let extensions = this.staleExtensionDirs.length;
+    const extensions = this.staleExtensionDirs.length;
     if (extensions > 0) {
-      for (let extensionDir of this.staleExtensionDirs) {
+      for (const extensionDir of this.staleExtensionDirs) {
         await fs.rm(extensionDir, { force: true, recursive: true });
       }
       this.staleExtensionDirs = [];
@@ -99,7 +99,7 @@ export class ExtensionService {
   async lookUpVersionChanges(
     context: BrowserContext,
   ): Promise<ExtensionVersionChange[]> {
-    let changes: ExtensionVersionChange[] = [];
+    const changes: ExtensionVersionChange[] = [];
     const versions = new Map<string, string>();
     for (const [name, extensionId] of WALLETS_EXTENSIONS) {
       const page = new ExtensionStorePage(context, extensionId);

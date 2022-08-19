@@ -41,12 +41,15 @@ describe('Ethereum node', () => {
   it('should set ERC20 balance', async () => {
     await ethereumNodeService.startNode();
     expect(ethereumNodeService.state !== undefined);
-    const account = ethereumNodeService.state.accounts[0]
-    expect((await ethereumNodeService.setErc20Balance(account, MATIC_TOKEN, 0, 100)).toString() === '100');
+    const account = ethereumNodeService.state.accounts[0];
+    expect(
+      (
+        await ethereumNodeService.setErc20Balance(account, MATIC_TOKEN, 0, 100)
+      ).toString() === '100',
+    );
   }, 30000);
 
   afterEach(async () => {
     await ethereumNodeService.stopNode();
   });
-
 });

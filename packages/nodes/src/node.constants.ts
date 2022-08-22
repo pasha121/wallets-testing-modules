@@ -9,6 +9,11 @@ export type EthereumNodeServiceOptions = {
   defaultBalance?: number;
 };
 
+export type Account = {
+  address: string;
+  secretKey: string;
+};
+
 export class ServiceUnreachableError extends Error {
   private cause: { message: string };
   constructor(error: { message: string }, options: any) {

@@ -3,8 +3,8 @@ import { INestApplication } from '@nestjs/common';
 import {
   ExtensionService,
   ExtensionsModule,
-  WALLETS_EXTENSIONS,
 } from '@lidofinance/wallets-testing-extensions';
+import * as fs from 'fs';
 
 describe('Extension service', () => {
   let app: INestApplication;
@@ -22,8 +22,9 @@ describe('Extension service', () => {
 
   it('should init', async () => {
     const extensionDir = await extensionService.getExtensionDirFromId(
-      WALLETS_EXTENSIONS.get('🦊 MetaMask'),
+      'nkbihfbeogaeaoehlefnkodbefgpgknn',
     );
     expect(extensionDir).toBeDefined();
+    expect(fs.readdirSync(extensionDir).length).toBeGreaterThan(0);
   }, 30000);
 });

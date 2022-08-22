@@ -11,7 +11,7 @@ yarn add @lidofinance/wallets-testing-extensions
 ## Usage
 
 ```ts
-import {ExtensionService, ExtensionsModule, WALLETS_EXTENSIONS} from "@lidofinance/wallets-testing-extensions";
+import {ExtensionService, ExtensionsModule} from "@lidofinance/wallets-testing-extensions";
 
 @Module({
     imports: [ExtensionsModule],
@@ -26,7 +26,7 @@ export class MyService {
 
     async myMethod() {
         const extensionDir = await extensionService.getExtensionDirFromId(
-            WALLETS_EXTENSIONS.get('🦊 MetaMask'),
+            'nkbihfbeogaeaoehlefnkodbefgpgknn',
         );
         expect(extensionDir).toBeDefined();
     }

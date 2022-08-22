@@ -6,7 +6,6 @@ import axios from 'axios';
 import * as unzipper from 'unzipper';
 import { once } from 'events';
 import { ExtensionVersionChange } from './extension.model';
-import { WALLETS_EXTENSIONS } from './extension.constants';
 import { ExtensionStorePage } from './extension.store.page';
 import { BrowserContext, chromium } from 'playwright';
 import { Readable } from 'node:stream';
@@ -98,10 +97,11 @@ export class ExtensionService {
 
   async lookUpVersionChanges(
     context: BrowserContext,
+    extensions: Map<string, string>,
   ): Promise<ExtensionVersionChange[]> {
     const changes: ExtensionVersionChange[] = [];
     const versions = new Map<string, string>();
-    for (const [name, extensionId] of WALLETS_EXTENSIONS) {
+    for (const [name, extensionId] of extensions) {
       const page = new ExtensionStorePage(context, extensionId);
       await page.navigate();
       const newVersion = await page.getVersion();

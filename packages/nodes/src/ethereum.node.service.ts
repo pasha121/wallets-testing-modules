@@ -14,6 +14,7 @@ import {
   OPTIONS,
   ServiceUnreachableError,
   ERC20_SHORT_ABI,
+  Account,
 } from './node.constants';
 
 @Injectable()
@@ -22,8 +23,7 @@ export class EthereumNodeService {
     | {
         node: Server;
         nodeUrl: string;
-        accounts: string[];
-        secretKeys: string[];
+        accounts: Account[];
       }
     | undefined;
 
@@ -40,12 +40,13 @@ export class EthereumNodeService {
     await node.listen(this.options.port || 7545);
     const nodeUrl = `http://127.0.0.1:${this.options.port || 7545}`;
     const initialAccounts = await node.provider.getInitialAccounts();
-    const accounts = Object.keys(initialAccounts);
-    const secretKeys = accounts.map((key) => initialAccounts[key].secretKey);
+    const accounts: Account[] = Object.keys(initialAccounts).map((key) => {
+      return { address: key, secretKey: initialAccounts[key].secretKey };
+    });
     await Promise.all(
-      accounts.map(async (key: string) => {
+      accounts.map(async (account: Account) => {
         await node.provider.send('evm_setAccountNonce', [
-          key,
+          account.address,
           '0x' + Math.floor(Math.random() * 9) + 1,
         ]);
       }),
@@ -54,24 +55,24 @@ export class EthereumNodeService {
     node.on('close', async () => {
       this.state = undefined;
     });
-    this.state = { node, nodeUrl, accounts, secretKeys };
+    this.state = { node, nodeUrl, accounts };
   }
 
   async stopNode() {
     if (this.state !== undefined) await this.state.node.close();
   }
 
-  async getBalance(account?: string) {
+  async getBalance(account: Account) {
     if (this.state === undefined) return undefined;
     const response = await this.state.node.provider.request({
       method: 'eth_getBalance',
-      params: [account || this.state.accounts[0], 'latest'],
+      params: [account.address, 'latest'],
     });
     return utils.formatEther(response);
   }
 
   async setErc20Balance(
-    account: string,
+    account: Account,
     tokenAddress: string,
     mappingSlot: number,
     balance: number,
@@ -93,7 +94,10 @@ export class EthereumNodeService {
     // calculate slot index for account address in the mapping
     const slot = utils.solidityKeccak256(
       ['bytes32', 'bytes32'],
-      [utils.hexZeroPad(account, 32), utils.hexZeroPad(mappingSlotHex, 32)],
+      [
+        utils.hexZeroPad(account.address, 32),
+        utils.hexZeroPad(mappingSlotHex, 32),
+      ],
     );
 
     const value = BigNumber.from(balance).mul(decimals);
@@ -102,7 +106,7 @@ export class EthereumNodeService {
       method: 'evm_setAccountStorageAt',
       params: [tokenAddress, slot, value.toHexString()],
     });
-    const balanceAfter = await contract.balanceOf(account);
+    const balanceAfter = await contract.balanceOf(account.address);
     return balanceAfter.div(decimals);
   }
 

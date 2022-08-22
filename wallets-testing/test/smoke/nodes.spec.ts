@@ -35,7 +35,8 @@ describe('Ethereum node', () => {
   it('should init', async () => {
     await ethereumNodeService.startNode();
     expect(ethereumNodeService.state).toBeDefined();
-    expect(await ethereumNodeService.getBalance()).toEqual('1000.0');
+    const account = ethereumNodeService.state.accounts[0];
+    expect(await ethereumNodeService.getBalance(account)).toEqual('1000.0');
   }, 30000);
 
   it('should set ERC20 balance', async () => {
@@ -45,8 +46,8 @@ describe('Ethereum node', () => {
     expect(
       (
         await ethereumNodeService.setErc20Balance(account, MATIC_TOKEN, 0, 100)
-      ).toString() === '100',
-    );
+      ).toString(),
+    ).toEqual('100');
   }, 30000);
 
   afterEach(async () => {

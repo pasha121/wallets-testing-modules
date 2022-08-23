@@ -32,7 +32,7 @@ export class MetamaskPage implements WalletPage {
     if (!this.page) throw "Page isn't ready";
     await this.page.click("text='import tokens'");
     await this.page.click('text=Custom token');
-    await this.page.locator('id=custom-address').type(token);
+    await this.page.type('id=custom-address', token);
   }
 
   async closePopover() {
@@ -48,9 +48,9 @@ export class MetamaskPage implements WalletPage {
 
   async firstTimeSetup() {
     if (!this.page) throw "Page isn't ready";
-    await this.page.locator('text=Get started').click();
-    await this.page.locator('text=No thanks').click();
-    await this.page.locator('text=Import wallet').click();
+    await this.page.click('text=Get started');
+    await this.page.click('text=No thanks');
+    await this.page.click('text=Import wallet');
     const inputs = this.page.locator(
       '.import-srp__srp-word >> input[type=password]',
     );
@@ -58,11 +58,11 @@ export class MetamaskPage implements WalletPage {
     for (let i = 0; i < seedWords.length; i++) {
       await inputs.nth(i).fill(seedWords[i]);
     }
-    await this.page.locator('id=password').fill(this.config.PASSWORD);
-    await this.page.locator('id=confirm-password').fill(this.config.PASSWORD);
-    await this.page.locator('id=create-new-vault__terms-checkbox').click();
-    await this.page.locator('button[type=submit]').click();
-    await this.page.locator('button').click();
+    await this.page.fill('id=password', this.config.PASSWORD);
+    await this.page.fill('id=confirm-password', this.config.PASSWORD);
+    await this.page.click('id=create-new-vault__terms-checkbox');
+    await this.page.click('button[type=submit]');
+    await this.page.click('button');
     await this.closePopover();
   }
 
@@ -72,19 +72,20 @@ export class MetamaskPage implements WalletPage {
     await this.page.click('text=Settings');
     await this.page.click("text='Networks'");
     await this.page.click('text=Add a network');
-    await this.page
-      .locator(".form-field :has-text('Network Name') >> input")
-      .fill(networkName);
-    await this.page
-      .locator(".form-field :has-text('New RPC URL') >> input")
-      .fill(networkUrl);
-    await this.page
-      .locator(".form-field :has-text('Chain ID') >> input")
-      .fill(chainId);
-    await this.page
-      .locator(".form-field :has-text('Currency symbol') >> input")
-      .fill('ETH');
-    await this.page.locator('text=Save').click();
+    await this.page.fill(
+      ".form-field :has-text('Network Name') >> input",
+      networkName,
+    );
+    await this.page.fill(
+      ".form-field :has-text('New RPC URL') >> input",
+      networkUrl,
+    );
+    await this.page.fill(".form-field :has-text('Chain ID') >> input", chainId);
+    await this.page.fill(
+      ".form-field :has-text('Currency symbol') >> input",
+      'ETH',
+    );
+    await this.page.click('text=Save');
     await this.navigate();
   }
 
@@ -98,8 +99,8 @@ export class MetamaskPage implements WalletPage {
   }
 
   async connectWallet(page: Page) {
-    await page.locator('text=Next').click();
-    await page.locator('data-testid=page-container-footer-next').click();
+    await page.click('text=Next');
+    await page.click('data-testid=page-container-footer-next');
     await page.close();
   }
 

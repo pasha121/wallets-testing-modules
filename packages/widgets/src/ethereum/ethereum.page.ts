@@ -34,22 +34,18 @@ export class EthereumPage {
         .click();
       await this.page.waitForTimeout(2000);
       if ((await this.page.locator('text=Submit').count()) === 0) {
-        if (!(await this.page.locator('input[type=checkbox]').isChecked()))
+        if (!(await this.page.isChecked('input[type=checkbox]')))
           await this.page.click('input[type=checkbox]', { force: true });
         if (walletPage.config.COMMON.SIMPLE_CONNECT) {
-          await this.page
-            .locator(
-              `button[type=button] :text('${walletPage.config.COMMON.CONNECT_BUTTON_NAME}')`,
-            )
-            .click();
+          await this.page.click(
+            `button[type=button] :text('${walletPage.config.COMMON.CONNECT_BUTTON_NAME}')`,
+          );
         } else {
           const [connectWalletPage] = await Promise.all([
             this.page.context().waitForEvent('page', { timeout: 5000 }),
-            this.page
-              .locator(
-                `button[type=button] :text('${walletPage.config.COMMON.CONNECT_BUTTON_NAME}')`,
-              )
-              .click(),
+            this.page.click(
+              `button[type=button] :text('${walletPage.config.COMMON.CONNECT_BUTTON_NAME}')`,
+            ),
           ]);
           await walletPage.connectWallet(connectWalletPage);
         }
@@ -60,9 +56,7 @@ export class EthereumPage {
   }
 
   async doStaking(walletPage: WalletPage) {
-    await this.page
-      .locator('input[type=text]')
-      .fill(String(this.config.stakeAmount));
+    await this.page.fill('input[type=text]', String(this.config.stakeAmount));
     const [walletSignPage] = await Promise.all([
       this.page.context().waitForEvent('page', { timeout: 120000 }),
       this.page.click('button[type=submit]'),

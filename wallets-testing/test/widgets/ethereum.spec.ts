@@ -32,9 +32,9 @@ describe('Ethereum widget testing', () => {
   }, 60000);
 
   for (config of walletConfigsStake) {
-    test.only(`${config.WALLET_NAME} wallet stake`, async () => {
+    test(`${config.WALLET_NAME} wallet stake`, async () => {
       await browserService.stake();
-    }, 120000);
+    }, 160000);
   }
 
   for (config of walletConfigsConnect) {

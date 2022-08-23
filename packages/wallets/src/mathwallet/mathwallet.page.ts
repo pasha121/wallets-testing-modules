@@ -27,7 +27,7 @@ export class MathWalletPage implements WalletPage {
 
   async firstTimeSetup() {
     if (!this.page) throw "Page isn't ready";
-    let inputs = this.page.locator('input[type=password]');
+    const inputs = this.page.locator('input[type=password]');
     await inputs.nth(0).fill(this.config.PASSWORD);
     await inputs.nth(1).fill(this.config.PASSWORD);
     await this.page.click('.create');
@@ -55,9 +55,12 @@ export class MathWalletPage implements WalletPage {
     await this.page.click('text="Confirm"');
   }
 
+  // eslint-disable-next-line
   async connectWallet(page: Page) {}
 
+  // eslint-disable-next-line
   async assertTxAmount(page: Page, expectedAmount: string) {}
 
+  // eslint-disable-next-line
   async confirmTx(page: Page) {}
 }

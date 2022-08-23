@@ -41,7 +41,9 @@ export class MetamaskPage implements WalletPage {
       const popover =
         (await this.page.locator('data-testid=popover-close').count()) > 0;
       if (popover) await this.page.click('data-testid=popover-close');
-    } catch (err) {}
+    } catch (err) {
+      // do nothing
+    }
   }
 
   async firstTimeSetup() {
@@ -49,10 +51,10 @@ export class MetamaskPage implements WalletPage {
     await this.page.locator('text=Get started').click();
     await this.page.locator('text=No thanks').click();
     await this.page.locator('text=Import wallet').click();
-    let inputs = this.page.locator(
+    const inputs = this.page.locator(
       '.import-srp__srp-word >> input[type=password]',
     );
-    let seedWords = this.config.SECRET_PHRASE.split(' ');
+    const seedWords = this.config.SECRET_PHRASE.split(' ');
     for (let i = 0; i < seedWords.length; i++) {
       await inputs.nth(i).fill(seedWords[i]);
     }

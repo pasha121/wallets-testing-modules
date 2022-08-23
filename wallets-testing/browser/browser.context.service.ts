@@ -25,7 +25,7 @@ export class BrowserContextService {
 
   async initBrowserContext() {
     this.logger.debug('Starting a new browser context');
-    let browserContextPath = await fs.mkdtemp(os.tmpdir() + path.sep);
+    const browserContextPath = await fs.mkdtemp(os.tmpdir() + path.sep);
     this.browserContext = await chromium.launchPersistentContext(
       browserContextPath,
       {
@@ -84,7 +84,7 @@ export class BrowserContextService {
   }
 
   async clearStaleBrowserContexts() {
-    let contexts = this.browserContextPaths.length;
+    const contexts = this.browserContextPaths.length;
     if (contexts > 0) {
       for (const contextPath of this.browserContextPaths) {
         await fs.rm(contextPath, { force: true, recursive: true });

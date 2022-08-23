@@ -30,7 +30,7 @@ export class Coin98 implements WalletPage {
     if (!this.page) throw "Page isn't ready";
     await this.page.locator('text=Restore Wallet').click();
     await this.page.locator('text=Ok').click();
-    let inputs = this.page.locator('input[type=password]');
+    const inputs = this.page.locator('input[type=password]');
     await inputs.nth(0).fill(this.config.PASSWORD);
     await inputs.nth(1).fill(this.config.PASSWORD);
     await this.page.locator('button:has-text("Setup Password")').click();
@@ -60,6 +60,7 @@ export class Coin98 implements WalletPage {
     await page.locator('button:has-text("Connect")').click();
   }
 
+  // eslint-disable-next-line
   async assertTxAmount(page: Page, expectedAmount: string) {}
 
   async confirmTx(page: Page) {

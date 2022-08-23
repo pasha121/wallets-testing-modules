@@ -33,6 +33,8 @@ jobs:
         working-directory: wallets-testing
         env:
           RPC_URL: ${{ secrets.RPC_URL }}
+          WALLET_SECRET_PHRASE: ${{ secrets.WALLET_SECRET_PHRASE }}
+          WALLET_PASSWORD: ${{ secrets.WALLET_PASSWORD }}
 #      - name: Publish to NPM
 #        env:
 #          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

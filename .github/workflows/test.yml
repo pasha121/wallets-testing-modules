@@ -16,8 +16,6 @@ jobs:
           cache: 'yarn'
       - name: Install dependencies
         run: yarn install --immutable
-      - name: Install Playwright Browsers
-        run: npx playwright install --with-deps
       - name: Run lint
         run: yarn lint
       - name: Build Components
@@ -26,8 +24,10 @@ jobs:
       - name: Install dependencies in wallets-testing
         working-directory: wallets-testing
         run: yarn install --immutable
+      - name: Install Playwright Browsers
+        run: npx playwright install --with-deps
       - name: Run wallets tests
-        run: yarn test
+        run: xvfb-run --auto-servernum -- yarn test
         working-directory: wallets-testing
         env:
           RPC_URL: ${{ secrets.RPC_URL }}

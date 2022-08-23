@@ -131,7 +131,7 @@ export class EthereumNodeService {
     request: APIRequestContext,
     urlOrRequest: string | Request,
     options: any,
-  ): Promise<APIResponse> {
+  ): Promise<APIResponse | undefined> {
     let lastErr;
     options.timeout = 0;
     options.headers = { Connection: 'Keep-Alive', 'Keep-Alive': 'timeout=1' };
@@ -150,6 +150,6 @@ export class EthereumNodeService {
       )
     )
       throw new ServiceUnreachableError(lastErr, options);
-    throw Error("There's no response");
+    else return undefined;
   }
 }

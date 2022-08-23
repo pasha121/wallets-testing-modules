@@ -6,6 +6,8 @@ NestJS modules for wallets integrations automated testing.
 
 - [nodes](/packages/nodes/README.md)
 - [extensions](/packages/extensions/README.md)
+- [wallets](/packages/wallets/README.md)
+- [widgets](/packages/widgets/README.md)
 
 ## Testing app
 

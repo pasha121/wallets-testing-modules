@@ -64,7 +64,7 @@ export class EthereumPage {
       .locator('input[type=text]')
       .fill(String(this.config.stakeAmount));
     const [walletSignPage] = await Promise.all([
-      this.page.context().waitForEvent('page', { timeout: 90000 }),
+      this.page.context().waitForEvent('page', { timeout: 120000 }),
       this.page.click('button[type=submit]'),
     ]);
 

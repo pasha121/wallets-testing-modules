@@ -35,6 +35,7 @@ export class EthereumNodeService {
       chainId: this.options.chainId || 0x1,
       fork: { url: this.options.rpcUrl },
       logging: { quiet: true },
+      miner: { blockTime: 2 },
       wallet: { defaultBalance: this.options.defaultBalance || 1000 },
     });
     await node.listen(this.options.port || 7545);

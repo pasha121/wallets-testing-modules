@@ -1,5 +1,8 @@
 name: test
-on: pull_request
+on:
+  pull_request:
+  schedule:
+    - cron:  '* 2,14 * * *'
 jobs:
   test-packages:
     runs-on: ubuntu-latest
@@ -21,8 +24,13 @@ jobs:
       - name: Install dependencies in wallets-testing
         working-directory: wallets-testing
         run: yarn install --immutable
+      - name: Install Playwright Browsers
+        run: npx playwright install --with-deps
       - name: Run wallets tests
-        run: yarn test
+        run: xvfb-run --auto-servernum -- yarn test
         working-directory: wallets-testing
         env:
           RPC_URL: ${{ secrets.RPC_URL }}
+          WALLET_SECRET_PHRASE: ${{ secrets.WALLET_SECRET_PHRASE }}
+          WALLET_PASSWORD: ${{ secrets.WALLET_PASSWORD }}
+          NODE_OPTIONS: --max-old-space-size=4096

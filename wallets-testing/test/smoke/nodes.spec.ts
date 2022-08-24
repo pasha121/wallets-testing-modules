@@ -1,34 +1,21 @@
-import { Test, TestingModule } from '@nestjs/testing';
+import { Test } from '@nestjs/testing';
 import { INestApplication } from '@nestjs/common';
-import {
-  EthereumNodeService,
-  NodeModule,
-} from '@lidofinance/wallets-testing-nodes';
-import { ConfigModule, ConfigService } from '../../config';
+import { EthereumNodeService } from '@lidofinance/wallets-testing-nodes';
 import { MATIC_TOKEN } from './consts';
+import { prepareNodeModule } from '../../commons';
 
 describe('Ethereum node', () => {
   let app: INestApplication;
   let ethereumNodeService: EthereumNodeService;
-  let configService: ConfigService;
 
   beforeEach(async () => {
-    const moduleFixture: TestingModule = await Test.createTestingModule({
-      imports: [
-        NodeModule.forRoot(
-          (configService: ConfigService) => {
-            return { rpcUrl: configService.get('RPC_URL') };
-          },
-          [ConfigService],
-          [ConfigModule],
-        ),
-      ],
+    const moduleFixture = await Test.createTestingModule({
+      imports: [prepareNodeModule()],
     }).compile();
 
     app = moduleFixture.createNestApplication();
     ethereumNodeService =
       moduleFixture.get<EthereumNodeService>(EthereumNodeService);
-    configService = moduleFixture.get<ConfigService>(ConfigService);
     await app.init();
   });
 

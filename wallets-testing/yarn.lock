@@ -1250,7 +1250,7 @@ __metadata:
 
 "@lidofinance/wallets-testing-nodes@file:../packages/nodes::locator=wallets-testing%40workspace%3A.":
   version: 0.0.0-semantic-release
-  resolution: "@lidofinance/wallets-testing-nodes@file:../packages/nodes#../packages/nodes::hash=8f7aca&locator=wallets-testing%40workspace%3A."
+  resolution: "@lidofinance/wallets-testing-nodes@file:../packages/nodes#../packages/nodes::hash=f4c29b&locator=wallets-testing%40workspace%3A."
   dependencies:
     "@nestjs/common": ^8.2.5
     "@nestjs/config": ^2.2.0
@@ -1259,7 +1259,46 @@ __metadata:
     playwright: ^1.21.1
     reflect-metadata: ^0.1.13
     rxjs: ^7.5.6
-  checksum: c77bdeb1886940a70b591043c51bf8f526261066c557f1103c600251414536119b2371134b730cb38144d76dcf935a6650367d5bee4e6402dd17588d45010c2e
+  checksum: 4b97de8736722b92a211a284c78c67bf43816bd928567283dde14bc9fa52ae415fb86f28cbd5dcf3b1f0ee6a92a78723da4aaa761e663618424d814f42ce5c09
+  languageName: node
+  linkType: hard
+
+"@lidofinance/wallets-testing-wallets@file:../packages/wallets::locator=wallets-testing%40workspace%3A.":
+  version: 0.0.0-semantic-release
+  resolution: "@lidofinance/wallets-testing-wallets@file:../packages/wallets#../packages/wallets::hash=19b558&locator=wallets-testing%40workspace%3A."
+  dependencies:
+    expect: ^28.1.3
+    playwright: ^1.21.1
+    reflect-metadata: ^0.1.13
+    rxjs: ^7.5.6
+  checksum: 526b536423e6b0ce5a3e0a61aad41dd5f5d2226e5312c0c1c267cbed58747b20b335ab68ef3bd1e1c962e450ed68ce3ba44eee581d326ebffc120420699fe2d6
+  languageName: node
+  linkType: hard
+
+"@lidofinance/wallets-testing-wallets@file:../wallets::locator=%40lidofinance%2Fwallets-testing-widgets%40file%3A..%2Fpackages%2Fwidgets%23..%2Fpackages%2Fwidgets%3A%3Ahash%3D3d80e3%26locator%3Dwallets-testing%2540workspace%253A.":
+  version: 0.0.0-semantic-release
+  resolution: "@lidofinance/wallets-testing-wallets@file:../wallets#../wallets::hash=19b558&locator=%40lidofinance%2Fwallets-testing-widgets%40file%3A..%2Fpackages%2Fwidgets%23..%2Fpackages%2Fwidgets%3A%3Ahash%3D3d80e3%26locator%3Dwallets-testing%2540workspace%253A."
+  dependencies:
+    expect: ^28.1.3
+    playwright: ^1.21.1
+    reflect-metadata: ^0.1.13
+    rxjs: ^7.5.6
+  checksum: 526b536423e6b0ce5a3e0a61aad41dd5f5d2226e5312c0c1c267cbed58747b20b335ab68ef3bd1e1c962e450ed68ce3ba44eee581d326ebffc120420699fe2d6
+  languageName: node
+  linkType: hard
+
+"@lidofinance/wallets-testing-widgets@file:../packages/widgets::locator=wallets-testing%40workspace%3A.":
+  version: 0.0.0-semantic-release
+  resolution: "@lidofinance/wallets-testing-widgets@file:../packages/widgets#../packages/widgets::hash=3d80e3&locator=wallets-testing%40workspace%3A."
+  dependencies:
+    "@lidofinance/wallets-testing-wallets": "file:../wallets"
+    "@nestjs/common": ^8.2.5
+    "@nestjs/config": ^2.2.0
+    expect: ^28.1.3
+    playwright: ^1.21.1
+    reflect-metadata: ^0.1.13
+    rxjs: ^7.5.6
+  checksum: fc64735572562adcc4e2acd11cedacc3dbc1883e665c9da3fe4b0010b4ba2ad1f6bc8e55dd48b02d0da056172ec446fd6f6f62e2857c6fdea9dba6fe2b15bd77
   languageName: node
   linkType: hard
 
@@ -7652,6 +7691,8 @@ __metadata:
   dependencies:
     "@lidofinance/wallets-testing-extensions": "file:../packages/extensions"
     "@lidofinance/wallets-testing-nodes": "file:../packages/nodes"
+    "@lidofinance/wallets-testing-wallets": "file:../packages/wallets"
+    "@lidofinance/wallets-testing-widgets": "file:../packages/widgets"
     "@nestjs/cli": ^9.0.0
     "@nestjs/common": ^9.0.0
     "@nestjs/config": ^2.2.0

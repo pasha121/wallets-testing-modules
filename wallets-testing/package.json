@@ -23,6 +23,8 @@
   "dependencies": {
     "@lidofinance/wallets-testing-extensions": "file:../packages/extensions",
     "@lidofinance/wallets-testing-nodes": "file:../packages/nodes",
+    "@lidofinance/wallets-testing-wallets": "file:../packages/wallets",
+    "@lidofinance/wallets-testing-widgets": "file:../packages/widgets",
     "@nestjs/common": "^9.0.0",
     "@nestjs/config": "^2.2.0",
     "@nestjs/core": "^9.0.0",

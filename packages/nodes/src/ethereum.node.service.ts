@@ -35,6 +35,7 @@ export class EthereumNodeService {
       chainId: this.options.chainId || 0x1,
       fork: { url: this.options.rpcUrl },
       logging: { quiet: true },
+      miner: { blockTime: 2 },
       wallet: { defaultBalance: this.options.defaultBalance || 1000 },
     });
     await node.listen(this.options.port || 7545);
@@ -131,7 +132,7 @@ export class EthereumNodeService {
     request: APIRequestContext,
     urlOrRequest: string | Request,
     options: any,
-  ): Promise<APIResponse> {
+  ): Promise<APIResponse | undefined> {
     let lastErr;
     options.timeout = 0;
     options.headers = { Connection: 'Keep-Alive', 'Keep-Alive': 'timeout=1' };
@@ -150,6 +151,6 @@ export class EthereumNodeService {
       )
     )
       throw new ServiceUnreachableError(lastErr, options);
-    throw Error("There's no response");
+    else return undefined;
   }
 }

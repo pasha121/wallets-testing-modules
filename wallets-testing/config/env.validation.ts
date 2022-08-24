@@ -1,9 +1,15 @@
 import { plainToClass } from 'class-transformer';
-import { IsUrl, validateSync } from 'class-validator';
+import { IsString, IsUrl, validateSync } from 'class-validator';
 
 export class EnvironmentVariables {
   @IsUrl()
   RPC_URL: string;
+
+  @IsString()
+  WALLET_SECRET_PHRASE: string;
+
+  @IsString()
+  WALLET_PASSWORD: string;
 }
 
 export function validate(config: Record<string, unknown>) {

@@ -1,13 +1,13 @@
 import { Page } from 'playwright';
-import { ETHEREUM_WIDGET_CONFIG } from './ethereum.constants';
+import { POLYGON_WIDGET_CONFIG } from './polygon.constants';
 import { StakeConfig } from '../widgets.constants';
 import { WidgetPage } from '../widgets.page';
 import expect from 'expect';
 import { Logger } from '@nestjs/common';
 import { WalletPage } from '@lidofinance/wallets-testing-wallets';
 
-export class EthereumPage implements WidgetPage {
-  private readonly logger = new Logger(EthereumPage.name);
+export class PolygonPage implements WidgetPage {
+  private readonly logger = new Logger(PolygonPage.name);
   page: Page;
 
   constructor(page: Page, private stakeConfig: StakeConfig) {
@@ -15,16 +15,11 @@ export class EthereumPage implements WidgetPage {
   }
 
   async navigate() {
-    await this.page.goto(ETHEREUM_WIDGET_CONFIG.url);
+    await this.page.goto(POLYGON_WIDGET_CONFIG.url);
   }
 
   async connectWallet(walletPage: WalletPage) {
     await this.page.waitForTimeout(2000);
-    const popup =
-      (await this.page
-        .locator("button :has-text('Close and proceed')")
-        .count()) > 0;
-    if (popup) await this.page.click("button :has-text('Close and proceed')");
     const isConnected =
       (await this.page
         .locator("button :has-text('Connect wallet')")
@@ -35,7 +30,9 @@ export class EthereumPage implements WidgetPage {
         .first()
         .click();
       await this.page.waitForTimeout(2000);
-      if ((await this.page.locator('text=Submit').count()) === 0) {
+      if (
+        (await this.page.locator("button :has-text('Stake now')").count()) === 0
+      ) {
         if (!(await this.page.isChecked('input[type=checkbox]')))
           await this.page.click('input[type=checkbox]', { force: true });
         if (walletPage.config.COMMON.SIMPLE_CONNECT) {
@@ -52,7 +49,9 @@ export class EthereumPage implements WidgetPage {
           await walletPage.connectWallet(connectWalletPage);
         }
         await this.page.waitForTimeout(1000);
-        expect(await this.page.locator('text=Submit').count()).toBe(1);
+        expect(
+          await this.page.locator("button :has-text('Stake now')").count(),
+        ).toBe(1);
       }
     }
   }
@@ -62,15 +61,24 @@ export class EthereumPage implements WidgetPage {
       'input[type=text]',
       String(this.stakeConfig.stakeAmount),
     );
-    const [walletSignPage] = await Promise.all([
+    const [unlockSignPage] = await Promise.all([
+      this.page.context().waitForEvent('page', { timeout: 120000 }),
+      this.page.click("button :has-text('Unlock tokens')"),
+    ]);
+    await walletPage.confirmTx(unlockSignPage);
+    await this.page.waitForSelector(
+      `text=${this.stakeConfig.stakeAmount} MATIC unlocked`,
+      { timeout: 25000 },
+    );
+    // Close cross on the po-up have no usable id or locator.
+    // Simple click to the non-pop-up zone will efficiently close it
+    await this.page.mouse.click(20, 20);
+
+    const [stakeSignPage] = await Promise.all([
       this.page.context().waitForEvent('page', { timeout: 120000 }),
       this.page.click('button[type=submit]'),
     ]);
 
-    await walletPage.assertTxAmount(
-      walletSignPage,
-      String(this.stakeConfig.stakeAmount),
-    );
-    await walletPage.confirmTx(walletSignPage);
+    await walletPage.confirmTx(stakeSignPage);
   }
 }

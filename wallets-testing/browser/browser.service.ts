@@ -13,8 +13,11 @@ import {
   Account,
   EthereumNodeService,
 } from '@lidofinance/wallets-testing-nodes';
-import { EthereumPage } from '@lidofinance/wallets-testing-widgets';
-import { WALLET_PAGES } from './browser.constants';
+import {
+  WidgetConfig,
+  StakeConfig,
+} from '@lidofinance/wallets-testing-widgets';
+import { WALLET_PAGES, WIDGET_PAGES } from './browser.constants';
 import { BrowserContextService } from './browser.context.service';
 
 @Injectable()
@@ -22,6 +25,8 @@ export class BrowserService {
   private readonly logger = new Logger(BrowserService.name);
   private walletPage: WalletPage;
   private account: Account;
+  private widgetConfig: WidgetConfig;
+  private stakeConfig: StakeConfig;
 
   constructor(
     private extensionService: ExtensionService,
@@ -30,25 +35,46 @@ export class BrowserService {
     private ethereumNodeService: EthereumNodeService,
   ) {}
 
-  async setup(config: CommonWalletConfig) {
+  async setup(
+    commonWalletConfig: CommonWalletConfig,
+    widgetConfig: WidgetConfig,
+    stakeConfig?: StakeConfig,
+  ) {
+    this.widgetConfig = widgetConfig;
+    this.stakeConfig = stakeConfig;
     await this.ethereumNodeService.startNode();
     const walletConfig: WalletConfig = {
       SECRET_PHRASE: this.configService.get('WALLET_SECRET_PHRASE'),
       PASSWORD: this.configService.get('WALLET_PASSWORD'),
-      COMMON: config,
+      COMMON: commonWalletConfig,
     };
     walletConfig.EXTENSION_PATH =
       await this.extensionService.getExtensionDirFromId(
-        config.STORE_EXTENSION_ID,
+        commonWalletConfig.STORE_EXTENSION_ID,
       );
-    await this.browserContextService.setup(walletConfig);
+    await this.browserContextService.setup(
+      walletConfig,
+      this.widgetConfig.nodeUrl,
+    );
     const extension = new Extension(this.browserContextService.extensionId);
-    this.walletPage = new WALLET_PAGES[config.WALLET_NAME](
+    this.walletPage = new WALLET_PAGES[commonWalletConfig.WALLET_NAME](
       this.browserContextService.browserContext,
       extension.url,
       walletConfig,
     );
     this.account = this.ethereumNodeService.state.accounts[0];
+    if (
+      this.stakeConfig &&
+      this.stakeConfig.tokenAddress &&
+      this.stakeConfig.mappingSlot != undefined
+    ) {
+      await this.ethereumNodeService.setErc20Balance(
+        this.account,
+        this.stakeConfig.tokenAddress,
+        this.stakeConfig.mappingSlot || 0,
+        this.stakeConfig.stakeAmount * 100,
+      );
+    }
     await this.walletPage.setup();
     await this.walletPage.importKey(this.account.secretKey);
     await this.browserContextService.closePages();
@@ -56,13 +82,13 @@ export class BrowserService {
 
   async stake(): Promise<string> {
     try {
-      const ethereumPage = new EthereumPage(
+      const widgetPage = new WIDGET_PAGES[this.widgetConfig.name](
         await this.browserContextService.browserContext.newPage(),
-        { stakeAmount: 100 },
+        this.stakeConfig || {},
       );
-      await ethereumPage.navigate();
-      await ethereumPage.connectWallet(this.walletPage);
-      await ethereumPage.doStaking(this.walletPage);
+      await widgetPage.navigate();
+      await widgetPage.connectWallet(this.walletPage);
+      await widgetPage.doStaking(this.walletPage);
     } finally {
       await this.browserContextService.closePages();
     }
@@ -74,12 +100,12 @@ export class BrowserService {
 
   async connectWallet(): Promise<string> {
     try {
-      const ethereumPage = new EthereumPage(
+      const widgetPage = new WIDGET_PAGES[this.widgetConfig.name](
         await this.browserContextService.browserContext.newPage(),
-        { stakeAmount: 100 },
+        this.widgetConfig || {},
       );
-      await ethereumPage.navigate();
-      await ethereumPage.connectWallet(this.walletPage);
+      await widgetPage.navigate();
+      await widgetPage.connectWallet(this.walletPage);
     } finally {
       await this.browserContextService.closePages();
     }

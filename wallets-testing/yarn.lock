@@ -1265,25 +1265,25 @@ __metadata:
 
 "@lidofinance/wallets-testing-wallets@file:../packages/wallets::locator=wallets-testing%40workspace%3A.":
   version: 0.0.0-semantic-release
-  resolution: "@lidofinance/wallets-testing-wallets@file:../packages/wallets#../packages/wallets::hash=19b558&locator=wallets-testing%40workspace%3A."
+  resolution: "@lidofinance/wallets-testing-wallets@file:../packages/wallets#../packages/wallets::hash=3b3954&locator=wallets-testing%40workspace%3A."
   dependencies:
     expect: ^28.1.3
     playwright: ^1.21.1
     reflect-metadata: ^0.1.13
     rxjs: ^7.5.6
-  checksum: 526b536423e6b0ce5a3e0a61aad41dd5f5d2226e5312c0c1c267cbed58747b20b335ab68ef3bd1e1c962e450ed68ce3ba44eee581d326ebffc120420699fe2d6
+  checksum: 7e1b12cc77617df67fd97756f89f1e45fe526789e151c3362034bc94f8a7ff8ef94a0a39b8c9931e216b45c38d565509cfbb25850157db358fdfcdd254758b62
   languageName: node
   linkType: hard
 
 "@lidofinance/wallets-testing-wallets@file:../wallets::locator=%40lidofinance%2Fwallets-testing-widgets%40file%3A..%2Fpackages%2Fwidgets%23..%2Fpackages%2Fwidgets%3A%3Ahash%3D940a44%26locator%3Dwallets-testing%2540workspace%253A.":
   version: 0.0.0-semantic-release
-  resolution: "@lidofinance/wallets-testing-wallets@file:../wallets#../wallets::hash=19b558&locator=%40lidofinance%2Fwallets-testing-widgets%40file%3A..%2Fpackages%2Fwidgets%23..%2Fpackages%2Fwidgets%3A%3Ahash%3D940a44%26locator%3Dwallets-testing%2540workspace%253A."
+  resolution: "@lidofinance/wallets-testing-wallets@file:../wallets#../wallets::hash=3b3954&locator=%40lidofinance%2Fwallets-testing-widgets%40file%3A..%2Fpackages%2Fwidgets%23..%2Fpackages%2Fwidgets%3A%3Ahash%3D940a44%26locator%3Dwallets-testing%2540workspace%253A."
   dependencies:
     expect: ^28.1.3
     playwright: ^1.21.1
     reflect-metadata: ^0.1.13
     rxjs: ^7.5.6
-  checksum: 526b536423e6b0ce5a3e0a61aad41dd5f5d2226e5312c0c1c267cbed58747b20b335ab68ef3bd1e1c962e450ed68ce3ba44eee581d326ebffc120420699fe2d6
+  checksum: 7e1b12cc77617df67fd97756f89f1e45fe526789e151c3362034bc94f8a7ff8ef94a0a39b8c9931e216b45c38d565509cfbb25850157db358fdfcdd254758b62
   languageName: node
   linkType: hard
 

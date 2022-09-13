@@ -25,9 +25,13 @@ test.describe('Ethereum widget testing', () => {
   });
 
   test(`Metamask wallet stake`, async () => {
-    await browserService.setup(METAMASK_COMMON_CONFIG, ETHEREUM_WIDGET_CONFIG, {
-      stakeAmount: 100,
-    });
+    await browserService.setupWithNode(
+      METAMASK_COMMON_CONFIG,
+      ETHEREUM_WIDGET_CONFIG,
+      {
+        stakeAmount: 100,
+      },
+    );
     await browserService.stake();
   });
 

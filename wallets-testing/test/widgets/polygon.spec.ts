@@ -26,11 +26,15 @@ test.describe('Polygon widget testing', () => {
   });
 
   test(`Metamask wallet stake`, async () => {
-    await browserService.setup(METAMASK_COMMON_CONFIG, POLYGON_WIDGET_CONFIG, {
-      stakeAmount: 100,
-      tokenAddress: MATIC_TOKEN,
-      mappingSlot: 0,
-    });
+    await browserService.setupWithNode(
+      METAMASK_COMMON_CONFIG,
+      POLYGON_WIDGET_CONFIG,
+      {
+        stakeAmount: 100,
+        tokenAddress: MATIC_TOKEN,
+        mappingSlot: 0,
+      },
+    );
     await browserService.stake();
   });
 

@@ -53,11 +53,16 @@ export class BrowserContextService {
       this.logger.debug('Browser context closed');
     });
     await this.setExtensionVars();
-    await this.ethereumNodeService.mockRoute(
-      this.extensionConfig.COMMON.RPC_URL_PATTERN,
-      this.extensionPage,
-    );
-    await this.ethereumNodeService.mockRoute(this.nodeUrl, this.browserContext);
+    if (this.ethereumNodeService.state) {
+      await this.ethereumNodeService.mockRoute(
+        this.extensionConfig.COMMON.RPC_URL_PATTERN,
+        this.extensionPage,
+      );
+      await this.ethereumNodeService.mockRoute(
+        this.nodeUrl,
+        this.browserContext,
+      );
+    }
   }
 
   async setExtensionVars() {

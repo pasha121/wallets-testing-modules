@@ -35,6 +35,30 @@ export class BrowserService {
     private ethereumNodeService: EthereumNodeService,
   ) {}
 
+  async setupWithNode(
+    commonWalletConfig: CommonWalletConfig,
+    widgetConfig: WidgetConfig,
+    stakeConfig?: StakeConfig,
+  ) {
+    await this.ethereumNodeService.startNode();
+    this.account = this.ethereumNodeService.state.accounts[0];
+    await this.setup(commonWalletConfig, widgetConfig, stakeConfig);
+    if (
+      this.stakeConfig &&
+      this.stakeConfig.tokenAddress &&
+      this.stakeConfig.mappingSlot != undefined
+    ) {
+      await this.ethereumNodeService.setErc20Balance(
+        this.account,
+        this.stakeConfig.tokenAddress,
+        this.stakeConfig.mappingSlot || 0,
+        this.stakeConfig.stakeAmount * 100,
+      );
+    }
+    await this.walletPage.importKey(this.account.secretKey);
+    await this.browserContextService.closePages();
+  }
+
   async setup(
     commonWalletConfig: CommonWalletConfig,
     widgetConfig: WidgetConfig,
@@ -42,7 +66,6 @@ export class BrowserService {
   ) {
     this.widgetConfig = widgetConfig;
     this.stakeConfig = stakeConfig;
-    await this.ethereumNodeService.startNode();
     const walletConfig: WalletConfig = {
       SECRET_PHRASE: this.configService.get('WALLET_SECRET_PHRASE'),
       PASSWORD: this.configService.get('WALLET_PASSWORD'),
@@ -62,21 +85,7 @@ export class BrowserService {
       extension.url,
       walletConfig,
     );
-    this.account = this.ethereumNodeService.state.accounts[0];
-    if (
-      this.stakeConfig &&
-      this.stakeConfig.tokenAddress &&
-      this.stakeConfig.mappingSlot != undefined
-    ) {
-      await this.ethereumNodeService.setErc20Balance(
-        this.account,
-        this.stakeConfig.tokenAddress,
-        this.stakeConfig.mappingSlot || 0,
-        this.stakeConfig.stakeAmount * 100,
-      );
-    }
     await this.walletPage.setup();
-    await this.walletPage.importKey(this.account.secretKey);
     await this.browserContextService.closePages();
   }
 
@@ -92,10 +101,7 @@ export class BrowserService {
     } finally {
       await this.browserContextService.closePages();
     }
-    return (
-      'Success. Account balance is ' +
-      (await this.ethereumNodeService.getBalance(this.account))
-    );
+    return 'Success';
   }
 
   async connectWallet(): Promise<string> {
